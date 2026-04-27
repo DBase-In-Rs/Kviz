@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fastlane.lanes">
+    
+    
+    
+      
+      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.0014092">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="1: Switch to android build_release_aab lane" time="0.0010704">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="2: powershell -NoProfile -ExecutionPolicy Bypass -File &quot;D:/AndroidProjects/kviz/scripts/build_aab.ps1&quot;" time="158.623637">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="3: Switch to android upload_release_aab lane" time="0.0010875">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="4: upload_to_play_store" time="62.8447245">
+        
+      </testcase>
+    
+  </testsuite>
+</testsuites>

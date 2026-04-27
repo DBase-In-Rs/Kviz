@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">dbase.in.rs</domain>
+        <pin-set expiration="2027-05-01">
+            <pin digest="SHA-256">MSH19IIwG2k++ip0NQ7cWJeXMP3voBQrm8SBBAzTUSM=</pin>
+            <!-- TODO: Zameni placeholder ispod pravim backup sertifikatom (SPKI pin).
+                 Backup pin omogućava rotaciju ključa bez prekida za postojeće korisnike.
+                 Generiši ga sa: openssl s_client -connect dbase.in.rs:443 -servername dbase.in.rs -->
+            <pin digest="SHA-256">eKWiq/OMD5jsoKw8z+T8nVCHboelTqFhFeCC548+RE4=</pin>
+        </pin-set>
+    </domain-config>
+</network-security-config>

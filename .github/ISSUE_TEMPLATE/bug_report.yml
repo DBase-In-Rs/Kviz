@@ -1,0 +1,42 @@
+name: Bug Report
+description: Prijavi bag
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Hvala što prijavljuješ bag! Popuni što više polja.
+  - type: input
+    id: version
+    attributes:
+      label: Verzija aplikacije
+      placeholder: npr. 1.0.1
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Koraci za reprodukciju
+      placeholder: |
+        1. Otvori aplikaciju
+        2. Klikni na...
+        3. Vidi grešku
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Očekivano ponašanje
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Stvarno ponašanje
+    validations:
+      required: true
+  - type: textarea
+    id: device
+    attributes:
+      label: Uređaj (opciono)
+      placeholder: npr. Samsung Galaxy S24, Android 15

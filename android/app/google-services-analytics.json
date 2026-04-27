@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "224945393225",
+    "project_id": "kviz-dbase",
+    "storage_bucket": "kviz-dbase.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:224945393225:android:de6b013a9c42fc03c73998",
+        "android_client_info": {
+          "package_name": "rs.in.dbase.kviz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "224945393225-9bkgohrbbrmik0t51l4vd4favmivptb2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "rs.in.dbase.kviz",
+            "certificate_hash": "0daffa453bb1ad6a6159662becf0a33b7bb9e151"
+          }
+        },
+        {
+          "client_id": "224945393225-dlegjspbnmpvljdu8hdoiuh594k7sh8j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "rs.in.dbase.kviz",
+            "certificate_hash": "fe6d1744b9002025505564e558cdbf0201249b76"
+          }
+        },
+        {
+          "client_id": "224945393225-od2mhqs3nuu35kc72smpc5tbcrtoanvr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "rs.in.dbase.kviz",
+            "certificate_hash": "84261eef4a98727b459a3f454bb1b41913dece09"
+          }
+        },
+        {
+          "client_id": "224945393225-c5u3id5a4qmep7rc6ad7p4teb00p8fcm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByucjlxNPCHt3HaDvE8Wp3twx3wIT2peQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "224945393225-c5u3id5a4qmep7rc6ad7p4teb00p8fcm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

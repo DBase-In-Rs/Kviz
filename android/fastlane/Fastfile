@@ -1,0 +1,91 @@
+default_platform(:android)
+
+def repo_root
+  File.expand_path("../..", __dir__)
+end
+
+def aab_path
+  File.join(repo_root, "build", "app", "outputs", "bundle", "release", "app-release.aab")
+end
+
+def build_script_path
+  File.join(repo_root, "scripts", "build_aab.ps1")
+end
+
+def play_json_key_path
+  ENV["SUPPLY_JSON_KEY"] ||
+    ENV["GOOGLE_PLAY_JSON_KEY"] ||
+    File.join(repo_root, "secrets", "google-play-service-account.json")
+end
+
+def shell_quote(value)
+  "\"#{value.to_s.tr("\\", "/")}\""
+end
+
+def enabled?(value)
+  value == true || %w[1 true yes].include?(value.to_s.downcase)
+end
+
+def powershell_binary
+  Gem.win_platform? ? "powershell" : "pwsh"
+end
+
+platform :android do
+  private_lane :build_release_aab do |options|
+    UI.user_error!("Missing build script: #{build_script_path}") unless File.file?(build_script_path)
+
+    command = [
+      powershell_binary,
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      shell_quote(build_script_path)
+    ]
+
+    version = options[:version].to_s.strip
+    command += ["-Version", version] unless version.empty?
+    command << "-NoBump" if enabled?(options[:no_bump])
+
+    sh(command.join(" "))
+
+    UI.user_error!("AAB was not created: #{aab_path}") unless File.file?(aab_path)
+  end
+
+  private_lane :upload_release_aab do |options|
+    UI.user_error!(
+      "Missing Google Play service account JSON: #{play_json_key_path}. " \
+      "Create it in Play Console/API access or set SUPPLY_JSON_KEY."
+    ) unless File.file?(play_json_key_path)
+
+    upload_to_play_store(
+      package_name: "rs.in.dbase.kviz",
+      json_key: play_json_key_path,
+      track: options[:track],
+      aab: aab_path,
+      release_status: "completed",
+      skip_upload_apk: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+  end
+
+  desc "Build signed release AAB for Google Play"
+  lane :build_aab do |options|
+    build_release_aab(options)
+  end
+
+  desc "Build and upload AAB to Google Play internal testing"
+  lane :internal do |options|
+    build_release_aab(version: options[:version], no_bump: options[:no_bump])
+    upload_release_aab(track: "internal")
+  end
+
+  desc "Build and upload AAB to Google Play closed testing"
+  lane :closed do |options|
+    build_release_aab(version: options[:version], no_bump: options[:no_bump])
+    upload_release_aab(track: (options[:track] || "alpha"))
+  end
+end

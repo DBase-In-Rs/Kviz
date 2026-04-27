@@ -1,0 +1,24 @@
+name: Feature Request
+description: Predloži novu funkcionalnost
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Hvala na predlogu! Opiši šta bi voleo/la da vidiš.
+  - type: textarea
+    id: description
+    attributes:
+      label: Opis
+      description: Šta bi trebalo da se doda ili promeni?
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Zašto je ovo korisno?
+      description: Koji problem rešava ili kako poboljšava aplikaciju?
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativna rešenja (opciono)

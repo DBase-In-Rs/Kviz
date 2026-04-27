@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_id" translatable="false">224945393225</string>
+    <string name="package_name" translatable="false">rs.in.dbase.kviz</string>
+    <string name="achievement_1st" translatable="false">CgkIyZyp_sUGEAIQAg</string>
+    <string name="achievement_7_tanih_u_nizu" translatable="false">CgkIyZyp_sUGEAIQCA</string>
+    <string name="achievement_1000_poena" translatable="false">CgkIyZyp_sUGEAIQCQ</string>
+    <string name="achievement_moj_broj_bez_greke" translatable="false">CgkIyZyp_sUGEAIQCg</string>
+    <string name="achievement_top_10_rang_lista" translatable="false">CgkIyZyp_sUGEAIQCw</string>
+    <string name="leaderboard_pitanja" translatable="false">CgkIyZyp_sUGEAIQAw</string>
+    <string name="leaderboard_asocijacije" translatable="false">CgkIyZyp_sUGEAIQBA</string>
+    <string name="leaderboard_moj_broj" translatable="false">CgkIyZyp_sUGEAIQBQ</string>
+    <string name="leaderboard_tangram" translatable="false">CgkIyZyp_sUGEAIQBg</string>
+    <string name="leaderboard_dnevni_izazov" translatable="false">CgkIyZyp_sUGEAIQBw</string>
+</resources>

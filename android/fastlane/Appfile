@@ -1,0 +1,7 @@
+json_key_file(
+  ENV["SUPPLY_JSON_KEY"] ||
+  ENV["GOOGLE_PLAY_JSON_KEY"] ||
+  File.expand_path("../../secrets/google-play-service-account.json", __dir__)
+)
+
+package_name("rs.in.dbase.kviz")
