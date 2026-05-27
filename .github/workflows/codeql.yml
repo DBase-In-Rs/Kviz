@@ -1,0 +1,26 @@
+name: "CodeQL"
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Only scan JS/TS (web assets). Skip Java/Kotlin — Android builds
+      # require local.properties which isn't in CI. Dart linting is covered
+      # by flutter analyze in the main CI workflow.
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: javascript
+
+      - uses: github/codeql-action/analyze@v3
