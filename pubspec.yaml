@@ -43,7 +43,7 @@ dependencies:
   shared_preferences: ^2.5.3
   firebase_messaging: ^16.2.0
   flutter_secure_storage: ^10.3.1
-  upgrader: ^13.2.0
+  upgrader: ^13.5.0
   in_app_update: ^4.2.5
   package_info_plus: ^10.1.0
   in_app_purchase: ^3.2.3

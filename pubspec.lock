@@ -777,10 +777,10 @@ packages:
     dependency: "direct main"
     description:
       name: upgrader
-      sha256: "7e088ecbe95aa0e31d44600b39d419b2f354c7a59b2e06453fcca5a0944660a0"
+      sha256: "6282524d4b664e48e24736ce343eedd115dcc1ce79198fc0bd46f14692e1f05e"
       url: "https://pub.dev"
     source: hosted
-    version: "13.4.0"
+    version: "13.5.0"
   url_launcher:
     dependency: transitive
     description:
