@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../data/billing/kviz_iap_service.dart';
 import '../../../data/remote/analytics_service.dart';
@@ -16,6 +17,7 @@ class IapSubscriptionSettingsCard extends StatefulWidget {
     required this.useCyrillic,
     required this.onLoadSubscriptions,
     required this.onVerifyPurchase,
+    required this.onCreatePiCheckout,
     required this.onSubscriptionChanged,
   });
 
@@ -26,6 +28,7 @@ class IapSubscriptionSettingsCard extends StatefulWidget {
     String purchaseToken,
   )
   onVerifyPurchase;
+  final Future<String> Function(String productId) onCreatePiCheckout;
   final VoidCallback onSubscriptionChanged;
 
   @override
@@ -41,6 +44,7 @@ class _IapSubscriptionSettingsCardState
   bool _storeAvailable = false;
   bool _restoring = false;
   String? _pendingProductId;
+  String? _openingPiProductId;
   String? _activeEntitlement;
   String? _message;
   Map<String, ProductDetails> _products = const <String, ProductDetails>{};
@@ -304,8 +308,73 @@ class _IapSubscriptionSettingsCardState
     }
   }
 
+  Future<void> _openPiCheckout(_SubscriptionPlan plan) async {
+    if (_pendingProductId != null ||
+        _restoring ||
+        _openingPiProductId != null) {
+      return;
+    }
+
+    KvizAnalytics.uiAction(
+      screen: 'settings',
+      area: 'iap',
+      target: 'pi_checkout_${plan.analyticsKey}',
+    );
+    setState(() {
+      _openingPiProductId = plan.productId;
+      _message = t(
+        'Otvaramo Pi checkout. Najbolje radi u Pi Browser-u.',
+        'Отварамо Pi checkout. Најбоље ради у Pi Browser-у.',
+      );
+    });
+
+    try {
+      final checkoutUrl = (await widget.onCreatePiCheckout(
+        plan.productId,
+      )).trim();
+      final uri = Uri.tryParse(checkoutUrl);
+      if (uri == null || !uri.hasScheme) {
+        throw const FormatException('Invalid Pi checkout URL.');
+      }
+
+      final launched = await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+      if (!mounted) return;
+      setState(() {
+        _message = launched
+            ? t(
+                'Pi checkout je otvoren. Posle plaćanja vrati se ovde i osveži status.',
+                'Pi checkout је отворен. После плаћања врати се овде и освежи статус.',
+              )
+            : t(
+                'Ne mogu da otvorim Pi checkout. Instaliraj/otvori Pi Browser i pokušaj ponovo.',
+                'Не могу да отворим Pi checkout. Инсталирај/отвори Pi Browser и покушај поново.',
+              );
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _message = t(
+          'Pi plaćanje trenutno nije dostupno. Pokušaj ponovo kasnije.',
+          'Pi плаћање тренутно није доступно. Покушај поново касније.',
+        );
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _openingPiProductId = null;
+        });
+      }
+    }
+  }
+
   Future<void> _restorePurchases() async {
-    if (!_storeAvailable || _pendingProductId != null || _restoring) {
+    if (!_storeAvailable ||
+        _pendingProductId != null ||
+        _restoring ||
+        _openingPiProductId != null) {
       return;
     }
 
@@ -402,15 +471,23 @@ class _IapSubscriptionSettingsCardState
               loading: _loading,
               storeAvailable: _storeAvailable,
               pending: _pendingProductId == plan.productId,
-              busy: _pendingProductId != null || _restoring,
+              openingPi: _openingPiProductId == plan.productId,
+              busy:
+                  _pendingProductId != null ||
+                  _restoring ||
+                  _openingPiProductId != null,
               onBuy: _buy,
+              onPiCheckout: _openPiCheckout,
             ),
             if (plan != _plans.last) const SizedBox(height: 10),
           ],
           const SizedBox(height: 12),
           OutlinedButton.icon(
             onPressed:
-                _storeAvailable && _pendingProductId == null && !_restoring
+                _storeAvailable &&
+                    _pendingProductId == null &&
+                    !_restoring &&
+                    _openingPiProductId == null
                 ? _restorePurchases
                 : null,
             icon: _restoring
@@ -452,8 +529,10 @@ class _SubscriptionPlanCard extends StatelessWidget {
     required this.loading,
     required this.storeAvailable,
     required this.pending,
+    required this.openingPi,
     required this.busy,
     required this.onBuy,
+    required this.onPiCheckout,
   });
 
   final _SubscriptionPlan plan;
@@ -462,9 +541,11 @@ class _SubscriptionPlanCard extends StatelessWidget {
   final bool loading;
   final bool storeAvailable;
   final bool pending;
+  final bool openingPi;
   final bool busy;
   final Future<void> Function(_SubscriptionPlan plan, ProductDetails product)
   onBuy;
+  final Future<void> Function(_SubscriptionPlan plan) onPiCheckout;
 
   String t(String latin, String cyr) => tr(useCyrillic, latin, cyr);
 
@@ -557,28 +638,55 @@ class _SubscriptionPlanCard extends StatelessWidget {
               ),
             ),
           const SizedBox(height: 12),
-          SizedBox(
-            height: 46,
-            child: ElevatedButton.icon(
-              onPressed: canBuy ? () => onBuy(plan, details) : null,
-              icon: pending
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
-                    )
-                  : Icon(plan.buttonIcon),
-              label: Text(
-                pending
-                    ? t('Obrada...', 'Обрада...')
-                    : details == null
-                    ? t('Čeka Play Console', 'Чека Play Console')
-                    : plan.buttonLabel(useCyrillic),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              SizedBox(
+                height: 46,
+                child: ElevatedButton.icon(
+                  onPressed: canBuy ? () => onBuy(plan, details) : null,
+                  icon: pending
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : Icon(plan.buttonIcon),
+                  label: Text(
+                    pending
+                        ? t('Obrada...', 'Обрада...')
+                        : details == null
+                        ? t('Čeka Play Console', 'Чека Play Console')
+                        : plan.buttonLabel(useCyrillic),
+                  ),
+                ),
               ),
-            ),
+              SizedBox(
+                height: 46,
+                child: OutlinedButton.icon(
+                  onPressed: busy ? null : () => onPiCheckout(plan),
+                  icon: openingPi
+                      ? SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: plan.color,
+                          ),
+                        )
+                      : const Icon(Icons.public_rounded),
+                  label: Text(
+                    openingPi
+                        ? t('Otvaranje Pi...', 'Отварање Pi...')
+                        : t('Plati Pi', 'Плати Pi'),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

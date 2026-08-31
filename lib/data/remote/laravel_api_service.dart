@@ -275,6 +275,23 @@ class LaravelApiService {
     return KvizSubscriptionSnapshot.fromJson(payload);
   }
 
+  Future<String> createPiSubscriptionCheckout({
+    required String accessToken,
+    required String mobileSessionToken,
+    required String productId,
+  }) async {
+    final payload = await _apiClient.postJson(
+      '/quiz/subscriptions/pi/checkout',
+      headers: _jsonHeaders(
+        accessToken: accessToken,
+        mobileSessionToken: mobileSessionToken,
+      ),
+      body: <String, dynamic>{'product_id': productId},
+    );
+
+    return payload['checkout_url']?.toString() ?? '';
+  }
+
   Future<KvizSubscriptionSnapshot> verifySubscriptionPurchase({
     required String accessToken,
     required String mobileSessionToken,

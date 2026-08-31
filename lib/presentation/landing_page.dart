@@ -295,6 +295,16 @@ class _LandingPageState extends State<LandingPage> {
     return status;
   }
 
+  Future<String> _createPiSubscriptionCheckout(String productId) async {
+    final api = _newLaravelApi();
+    final mobileSessionToken = await _acquireMobileSessionToken();
+    return api.createPiSubscriptionCheckout(
+      accessToken: widget.authSession.accessToken,
+      mobileSessionToken: mobileSessionToken,
+      productId: productId,
+    );
+  }
+
   Future<KvizSubscriptionSnapshot> _verifySubscriptionPurchase(
     String productId,
     String purchaseToken,
@@ -2085,6 +2095,7 @@ class _LandingPageState extends State<LandingPage> {
           useCyrillic: widget.useCyrillic,
           onLoadSubscriptions: _loadSubscriptionStatus,
           onVerifyPurchase: _verifySubscriptionPurchase,
+          onCreatePiCheckout: _createPiSubscriptionCheckout,
           onSubscriptionChanged: _refreshAdQuota,
         ),
         const SizedBox(height: 14),

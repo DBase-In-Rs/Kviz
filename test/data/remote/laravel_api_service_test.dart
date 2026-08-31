@@ -397,6 +397,44 @@ void main() {
       },
     );
 
+    test('Pi checkout posts product and returns checkout url', () async {
+      late http.Request capturedRequest;
+      final service = LaravelApiService(
+        apiClient: ApiClient(
+          baseUrl: 'https://api.example.test/api/v1',
+          httpClient: MockClient((request) async {
+            capturedRequest = request;
+            return http.Response(
+              jsonEncode(<String, dynamic>{
+                'ok': true,
+                'checkout_url':
+                    'https://dbase.in.rs/kviz/pi/checkout/7/kviz_no_ads_monthly?signature=sig',
+              }),
+              200,
+            );
+          }),
+        ),
+      );
+
+      final checkoutUrl = await service.createPiSubscriptionCheckout(
+        accessToken: 'access-token',
+        mobileSessionToken: 'mobile-token',
+        productId: 'kviz_no_ads_monthly',
+      );
+
+      expect(checkoutUrl, contains('/kviz/pi/checkout/7/kviz_no_ads_monthly'));
+      expect(capturedRequest.method, 'POST');
+      expect(
+        capturedRequest.url.path,
+        '/api/v1/quiz/subscriptions/pi/checkout',
+      );
+      expect(capturedRequest.headers['Authorization'], 'Bearer access-token');
+      expect(capturedRequest.headers['X-Mobile-Session-Token'], 'mobile-token');
+      expect(jsonDecode(capturedRequest.body), <String, dynamic>{
+        'product_id': 'kviz_no_ads_monthly',
+      });
+    });
+
     test('subscription status reads server entitlements', () async {
       late http.Request capturedRequest;
       final service = LaravelApiService(
