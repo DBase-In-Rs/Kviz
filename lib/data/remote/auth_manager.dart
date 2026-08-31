@@ -170,7 +170,7 @@ class AuthManager {
     await _googleSignIn.signOut();
     try {
       final account = await _googleSignIn.authenticate();
-      return _loginWithGoogleAccount(account);
+      return await _loginWithGoogleAccount(account);
     } on GoogleSignInException catch (error) {
       final mapped = _mapGoogleSignInFailure(error);
       if (mapped != null) {

@@ -31,7 +31,7 @@ class KvizAdMob {
       await MobileAds.instance.updateRequestConfiguration(
         RequestConfiguration(
           maxAdContentRating: MaxAdContentRating.g,
-          tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
+          ageRestrictedTreatment: AgeRestrictedTreatment.child,
         ),
       );
       return await MobileAds.instance.initialize();

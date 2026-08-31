@@ -5,7 +5,6 @@ plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
-    id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -23,7 +22,8 @@ val adMobAppId = providers.gradleProperty("KVIZ_ADMOB_APP_ID")
 
 android {
     namespace = "rs.in.dbase.kviz"
-    compileSdk = flutter.compileSdkVersion
+    // flutter_secure_storage 11+ zahteva API 37; flutter.compileSdkVersion je jos na 36
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -78,7 +78,7 @@ kotlin {
 
 dependencies {
     implementation("com.google.android.play:integrity:1.6.0")
-    implementation("com.google.android.gms:play-services-games-v2:21.0.0")
+    implementation("com.google.android.gms:play-services-games-v2:22.0.0")
 }
 
 flutter {

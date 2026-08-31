@@ -1,10 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
-
-plugins {
-    id("org.jetbrains.kotlin.android") version "2.3.21" apply false
-}
-
 allprojects {
     repositories {
         google()
@@ -19,18 +12,6 @@ subprojects {
     val newSubprojectBuildDir = newBuildDir.dir(project.name)
     project.layout.buildDirectory.set(newSubprojectBuildDir)
 
-    if (name in setOf("firebase_analytics", "firebase_app_check")) {
-        pluginManager.withPlugin("com.android.library") {
-            pluginManager.apply("org.jetbrains.kotlin.android")
-        }
-        pluginManager.withPlugin("org.jetbrains.kotlin.android") {
-            extensions.configure<KotlinAndroidProjectExtension>("kotlin") {
-                compilerOptions {
-                    jvmTarget.set(JvmTarget.JVM_17)
-                }
-            }
-        }
-    }
     project.evaluationDependsOn(":app")
 }
 
