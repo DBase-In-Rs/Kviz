@@ -12,3 +12,8 @@ GeneratedPluginRegistrant.java
 key.properties
 **/*.keystore
 **/*.jks
+
+# Bundler (fastlane) local install
+/vendor/bundle/
+/.bundle/
+fastlane/report.xml
