@@ -23,7 +23,7 @@ plugins {
     id("com.google.gms.google-services") version "4.5.0" apply false
     id("com.google.firebase.crashlytics") version "3.0.7" apply false
     // apply false: AGP built-in Kotlin koristi KGP sa classpath-a; niko ne sme da ga aplicira
-    id("org.jetbrains.kotlin.android") version "2.4.10" apply false
+    id("org.jetbrains.kotlin.android") version "2.4.20" apply false
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
