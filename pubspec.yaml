@@ -42,7 +42,7 @@ dependencies:
   http: ^1.6.0
   shared_preferences: ^2.5.5
   firebase_messaging: ^16.6.0
-  flutter_secure_storage: ^11.0.0
+  flutter_secure_storage: ^11.2.0
   upgrader: ^13.7.0
   in_app_update: ^5.0.0
   package_info_plus: ^10.2.1
