@@ -31,7 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.9
+  cupertino_icons: ^2.0.0
   firebase_app_check: ^0.4.9
   firebase_analytics: ^12.6.1
   firebase_core: ^4.15.2
